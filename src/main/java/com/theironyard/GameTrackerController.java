@@ -34,7 +34,7 @@ public class GameTrackerController {
             gameList = games.findByReleaseYear(releaseYear);
         }
         else if (user != null) {
-            gameList = games.findByUser(user);
+            gameList = games.findByUser(user);   // TODO: may want to add 'ByUser' to previous as well
         }
         else {
             gameList = games.findAll();

@@ -1,0 +1,67 @@
+<html>
+<body>
+{{^user}}
+<form action="/login" method="post">
+    <input type="text" placeholder="Username" name="userName" required/>
+    <input type="password" placeholder="Password" name="password" required/>
+    <button type="submit">Login</button>
+</form>
+{{/user}}
+
+{{#user}}
+Welcome, {{name}}!
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+<br/><br/>
+
+<a href="/">All</a>
+<a href="/?genre=adventure">adventure</a>
+<a href="/?genre=rpg">RPG</a>
+<a href="/?genre=strategy">Strategy</a>
+<a href="/?genre=shooter">Shooter</a>
+
+<form action="/add-game" method="post">
+    <input type="text" placeholder="Name" name="gameName"/>
+    <select name="gameGenre">
+        <option selected disabled>Genre</option>
+        <option value="adventure">Adventure</option>
+        <option value="rpg">RPG</option>
+        <option value="strategy">Strategy</option>
+        <option value="shooter">Shooter</option>
+    </select>
+    <select name="gamePlatform">
+        <option selected disabled>Platform</option>
+        <option value="pc">PC</option>
+        <option value="ps4">PS4</option>
+        <option value="xbone">XBox One</option>
+        <option value="wiiu">Wii U</option>
+    </select>
+    <input type="number" placeholder="Release Year" name="gameYear"/>
+    <button type="submit">Add Game</button>
+</form>
+
+<form action="/" method="get">
+    <input type="text" placeholder="Search text" name="search"/>
+    <button type="submit">Search</button>
+</form>
+<br><br/>
+
+<ol>
+    {{#games}}
+    <li>{{name}}: {{genre}} type game on {{platform}} released in {{releaseYear}}</li>
+    {{/games}}
+</ol>
+
+<table>
+    {{#data}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{email}}</td>
+    </tr>
+    {{/data}}
+</table>
+
+{{/user}}
+</body>
+</html>

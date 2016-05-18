@@ -5,13 +5,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import utils.PasswordStorage;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
 /**
- * Created by johnjastrow on 5/4/16.
+ * Scala version of the GameTracker.
+ * Allows users to enter games, and then filter by the genres.
  */
 @Controller
 public class GameTrackerController {
@@ -34,7 +36,7 @@ public class GameTrackerController {
             gameList = games.findByReleaseYear(releaseYear);
         }
         else if (user != null) {
-            gameList = games.findByUser(user);   // TODO: may want to add 'ByUser' to previous as well
+            gameList = games.findByUser(user);
         }
         else {
             gameList = games.findAll();
@@ -52,7 +54,7 @@ public class GameTrackerController {
         if (gamePlatform == null) gamePlatform = "";
         if (gameName == null) gameName = "";
 
-        int gameYearInt = 2000;
+        int gameYearInt = 1999;
         if (gameYear != null && ! gameYear.isEmpty()) {
             gameYearInt = Integer.parseInt(gameYear);
         }
@@ -69,11 +71,17 @@ public class GameTrackerController {
     public String login(HttpSession session, String userName, String password) throws Exception {
         User user = users.findFirstByName(userName);
         if (user == null){
-            user = new User(userName, password);
+            user = new User(userName, PasswordStorage.createHash(password));
             users.save(user);
         }
-        else if (! password.equals(user.password)) {
-            throw new Exception("Invalid login");
+
+        else if (! PasswordStorage.verifyPassword(password, user.password)) {
+            try {
+                return  "redirect:/";
+            }catch (Exception e){
+                System.out.println("Invalid login. " + e);
+                return "redirect:/";
+            }
         }
 
         session.setAttribute("username", userName);
